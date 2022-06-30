@@ -1,5 +1,4 @@
-
-export class Issuer {
+export class MNFTIssuer {
   version: number;
   class_count: number;
   set_count: number;

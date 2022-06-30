@@ -1,4 +1,4 @@
-import {Decode} from "./Decode";
+import { Decode } from './Decode';
 
 export class HexDecode implements Decode {
   readUInt(hex: string): number {

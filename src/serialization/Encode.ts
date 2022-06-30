@@ -1,4 +1,1 @@
-
-export interface Encode {
-
-}
+export interface Encode {}
