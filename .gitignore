@@ -1,0 +1,23 @@
+.idea
+.vscode
+.eslintcache
+
+# lib
+node_modules
+
+# yarn
+yarn-error.log
+
+# build
+dist
+
+# Mac OS
+.DS_Store
+
+# log
+**logs
+
+# sqlite
+database.sqlite*
+database
+

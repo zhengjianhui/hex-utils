@@ -2,6 +2,8 @@ import { MNFTIssuer } from './MNFTIssuer';
 import { HexDecode } from '../serialization/HexDecode';
 import * as ckbUtils from '@nervosnetwork/ckb-sdk-utils';
 import { MNFTClass } from './MNFTClass';
+import { MNFTCell } from './MNFTCell';
+import { log } from 'util';
 
 export class MNFTFactory {
   static getMNFTIssuer(): MNFTIssuer {
@@ -55,5 +57,34 @@ export class MNFTFactory {
     nftClass.renderer = decode.readStr(cellData.slice(170, 326));
 
     return nftClass;
+  }
+
+  static getMNFTCell(): MNFTCell {
+    // link https://explorer.nervos.org/transaction/0xcb720ea12a40f896eb57f937d58f3cf6112c1d74ea470acdd1163a0146565820 output#14
+    const cellData = '000000000000000000c000';
+    const type: CKBComponents.Script = {
+      codeHash: '0x2b24f0d644ccbdd77bbf86b27c8cca02efa0ad051e447c212636d9ee7acaaec9',
+      hashType: 'type',
+      args: '0x8f67efedd50c61c9dd332defd4051f08a02d7977000000010000000d',
+    };
+
+    const decode = new HexDecode();
+
+    const cell = new MNFTCell();
+    cell.version = decode.readUInt(cellData.slice(0, 2));
+
+    const uint8Array = Uint8Array.from(Buffer.from(cellData.slice(2, 18), 'hex'));
+    const characteristic: number[] = [];
+    uint8Array.forEach((x) => characteristic.push(x));
+    cell.characteristic = characteristic;
+
+    cell.configure = decode.readUInt(cellData.slice(18, 20));
+    cell.state = decode.readUInt(cellData.slice(20, 22));
+
+    cell.IssuerID_byte20 = type.args.slice(0, 42);
+    cell.class_id = decode.readUInt32BE(type.args.slice(42, 50));
+    cell.TokenID = decode.readUInt32BE(type.args.slice(50));
+
+    return cell;
   }
 }
